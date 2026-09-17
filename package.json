@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-vibe-safe",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "ESLint rules for the mistakes AI coding assistants make in Next.js and Supabase apps: unverified sessions, unvalidated environment config, string execution. Zero dependencies.",
   "keywords": [
     "eslint",
