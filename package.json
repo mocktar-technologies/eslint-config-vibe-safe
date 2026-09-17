@@ -1,0 +1,50 @@
+{
+  "name": "eslint-config-vibe-safe",
+  "version": "0.1.0",
+  "description": "ESLint rules for the mistakes AI coding assistants make in Next.js and Supabase apps: unverified sessions, unvalidated environment config, string execution. Zero dependencies.",
+  "keywords": [
+    "eslint",
+    "eslintconfig",
+    "eslint-config",
+    "supabase",
+    "nextjs",
+    "security",
+    "ai",
+    "cursor",
+    "copilot",
+    "vibe-coding"
+  ],
+  "license": "MIT",
+  "author": "Mocktar Technologies LLC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mocktar-technologies/eslint-config-vibe-safe.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mocktar-technologies/eslint-config-vibe-safe/issues"
+  },
+  "homepage": "https://github.com/mocktar-technologies/eslint-config-vibe-safe#readme",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "peerDependencies": {
+    "eslint": ">=9.0.0"
+  },
+  "scripts": {
+    "test": "node test/mutations.mjs",
+    "test:packaged": "node test/packaged.mjs",
+    "prepublishOnly": "npm test && npm run test:packaged"
+  },
+  "devDependencies": {
+    "eslint": "^10.10.0"
+  }
+}
