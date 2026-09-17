@@ -1,0 +1,22 @@
+# Dependency updates.
+#
+# Only github-actions. Every action here is pinned to a full commit SHA, which is the
+# right thing to do and which also means nothing moves on its own: the Node 20
+# deprecation warning that prompted this file appeared because two pins had quietly
+# aged out. Dependabot understands SHA pinning and raises a pull request that moves the
+# SHA and updates the version comment, so the pin stays a pin and still goes forward.
+#
+# There is deliberately no npm ecosystem. This package has zero runtime dependencies
+# and one devDependency, eslint, which is the thing the CI matrix varies on purpose.
+# A bot narrowing that range would remove the test rather than improve it.
+
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "ci"

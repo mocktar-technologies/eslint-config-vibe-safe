@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   test:
-    name: ${{ matrix.os }}, eslint ${{ matrix.eslint }}
+    name: ${{ matrix.os }}, node ${{ matrix.node }}, eslint ${{ matrix.eslint }}
     runs-on: ${{ matrix.os }}
     # Without this the job inherits the six hour default.
     timeout-minutes: 10
@@ -32,16 +32,19 @@ jobs:
         # and the packaged test died with ENOENT before running a single check. A
         # linux-only matrix said the package was fine on a machine where it was not.
         os: [ubuntu-latest, windows-latest]
+        # package.json claims engines >=20.9.0. 20 is the floor that claim has to
+        # hold on; 24 is what a new project gets today.
+        node: ["20.9.0", "24"]
     steps:
       - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: "20"
+          node-version: ${{ matrix.node }}
 
       # A lock file is deliberately not committed and deliberately not used here. This
       # package has zero runtime dependencies, and the single devDependency is the thing
