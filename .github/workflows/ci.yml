@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# This package writes nothing and publishes nothing from CI, so it needs read only.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: ${{ matrix.os }}, eslint ${{ matrix.eslint }}
+    runs-on: ${{ matrix.os }}
+    # Without this the job inherits the six hour default.
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        # The package claims ESLint 9 or later in its peer range, so both are tested
+        # rather than assumed. A rule that stops firing on a major upgrade is exactly
+        # the failure this suite exists to catch.
+        eslint: ["^9.39.0", "^10.10.0"]
+        # Windows is here because it found a real bug the first time somebody ran the
+        # suite there: npm is npm.cmd, execFileSync without a shell cannot resolve it,
+        # and the packaged test died with ENOENT before running a single check. A
+        # linux-only matrix said the package was fine on a machine where it was not.
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "20"
+
+      # A lock file is deliberately not committed and deliberately not used here. This
+      # package has zero runtime dependencies, and the single devDependency is the thing
+      # the matrix varies, so pinning it would defeat the point of testing both majors.
+      # A supply chain check will flag this step as an install that ignores a lock file.
+      # It is right about the pattern and wrong about this case, which is the kind of
+      # call a person makes and a linter should not.
+      - name: Install ESLint ${{ matrix.eslint }}
+        run: npm install --no-audit --no-fund --no-save "eslint@${{ matrix.eslint }}"
+
+      - name: Mutation tests
+        run: npm test
+
+      - name: Install and lint from a packed tarball
+        run: npm run test:packaged
