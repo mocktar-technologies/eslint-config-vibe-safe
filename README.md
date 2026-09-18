@@ -1,5 +1,7 @@
 # eslint-config-vibe-safe
 
+[![npm](https://img.shields.io/npm/v/eslint-config-vibe-safe)](https://www.npmjs.com/package/eslint-config-vibe-safe)
+
 ESLint rules for the mistakes AI coding assistants make in Next.js and Supabase
 applications. Everything here catches code that is syntactically valid, passes a type
 check, and is still wrong.
