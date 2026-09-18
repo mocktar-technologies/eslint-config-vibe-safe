@@ -19,8 +19,17 @@ import { execFileSync } from "node:child_process";
 import { mkdtempSync, writeFileSync, mkdirSync, rmSync, readdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const PKG_ROOT = path.resolve(import.meta.dirname, "..");
+/**
+ * Not import.meta.dirname. That arrived in Node 20.11.0 and is undefined on anything
+ * older, and package.json declares engines.node ">=20.9.0", so the CI matrix pins
+ * 20.9.0 as the floor it promises to support. On that version the newer form yields
+ * undefined, path.resolve throws ERR_INVALID_ARG_TYPE, and the suite dies before a
+ * single check runs. fileURLToPath predates every version in range and returns the
+ * same path, so the tests run everywhere the package claims to work.
+ */
+const PKG_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 let passed = 0;
 const failures = [];
